@@ -6,7 +6,6 @@
 #define LEDHEAD_H_
 
 #include <stdint.h>
-#include "Adafruit_NeoPixel.h"
 
 class LedHead {
 
@@ -22,7 +21,7 @@ class LedHead {
       uint32_t blue();
       uint32_t violet();
       uint32_t off();
-      
+
       uint32_t color(uint8_t r, uint8_t g, uint8_t b);
 
       void updateEyeColor(uint32_t color);
