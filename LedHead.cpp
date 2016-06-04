@@ -36,8 +36,6 @@ const uint32_t colorUnknown = colorBlue;
 // status members
 bool statusLedOff = false;
 bool eyeLedsOff = false;
-bool error = false;
-bool errorsOnly = false;
 uint32_t lastEyeColor = colorUnknown;
 
 

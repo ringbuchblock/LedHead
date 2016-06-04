@@ -67,7 +67,7 @@ void initHead() {
 
 void wifiConfigModeCallback(WiFiManager *myWiFiManager) {
   log("Entered config mode");
-  //log(WiFi.softAPIP());
+  log(WiFi.softAPIP());
   //if you used auto generated SSID, print it
   //log(myWiFiManager->getConfigPortalSSID());
 }
