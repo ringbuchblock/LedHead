@@ -1,10 +1,8 @@
 /*
  * LED Head - LedHead.cpp
- * (c) by ringbuchblock
+ * (c) ringbuchblock
  */
 #include "LedHead.h"
-#include "Adafruit_NeoPixel.h"
-#include "Arduino.h"
 #include <vector>
 
 #define DEBUG               false
@@ -14,24 +12,25 @@
 #define DELAY_MILLIS        SEC_1
 #define ALL_COLOR_DELAY     SEC_1
 
-#define DATA_PIN       14
 #define LED_COUNT      3
-#define LEFT_EYE       2
-#define RIGHT_EYE      1
-#define STATUS_LED     0
-#define BRIGHTNESS     30
-  
-Adafruit_NeoPixel leds = Adafruit_NeoPixel(LED_COUNT, DATA_PIN, NEO_GRB + NEO_KHZ800);
+
+Adafruit_NeoPixel leds;
+
+// leds
+uint16_t leftEye;
+uint16_t rightEye;
+uint16_t statusLed;
+uint8_t brightness;
 
 // colors
-const uint32_t colorRed = leds.Color(150, 0, 0);
-const uint32_t colorOrange = leds.Color(255, 128, 0);
-const uint32_t colorGreen = leds.Color(0, 150, 0);
-const uint32_t colorBlue = leds.Color(0, 0, 150);
-const uint32_t colorViolet = leds.Color(100, 0, 200);
-const uint32_t colorYellow = leds.Color(255, 255, 0);
+uint32_t colorRed;
+uint32_t colorOrange;
+uint32_t colorGreen;
+uint32_t colorBlue;
+uint32_t colorViolet;
+uint32_t colorYellow;
+uint32_t colorOff;
 const std::vector<uint32_t> allColors = {colorRed, colorOrange, colorYellow, colorGreen, colorBlue, colorViolet};
-const uint32_t colorOff = leds.Color(0, 0, 0);
 const uint32_t colorUnknown = colorBlue;
 
 // status members
@@ -75,18 +74,32 @@ void LedHead::showAllColors() {
 // PUBLIC
 // ##################################################################################
 
-LedHead::LedHead() {
+LedHead::LedHead(uint16_t leftEye, uint16_t rightEye, uint16_t statusLed, uint8_t brightness, uint8_t pin, neoPixelType type) {
   hLog("init LED head");
 
+  // leds
+  leftEye = leftEye;
+  rightEye = rightEye;
+  statusLed = statusLed;
+
+  // init leds
+  leds = Adafruit_NeoPixel(LED_COUNT, pin, type);
   leds.begin(); // This initializes the NeoPixel library. 
-  leds.setBrightness(BRIGHTNESS);
-  
+  leds.setBrightness(brightness);
+
+  // init colors
+  colorRed = leds.Color(150, 0, 0);
+  colorOrange = leds.Color(255, 128, 0);
+  colorGreen = leds.Color(0, 150, 0);
+  colorBlue = leds.Color(0, 0, 150);
+  colorViolet = leds.Color(100, 0, 200);
+  colorYellow = leds.Color(255, 255, 0);
+  colorOff = leds.Color(0, 0, 0);
+
   showAllColors();
 }
 
-LedHead::~LedHead() {
-  
-}
+LedHead::~LedHead() {}
 
 uint32_t LedHead::color(uint8_t r, uint8_t g, uint8_t b) {
   return leds.Color(r,g,b);
@@ -127,8 +140,8 @@ void LedHead::updateEyeColor(uint32_t color) {
     return;
   }
   hDebugLog("update eye color");
-  leds.setPixelColor(LEFT_EYE, color);
-  leds.setPixelColor(RIGHT_EYE, color);
+  leds.setPixelColor(leftEye, color);
+  leds.setPixelColor(rightEye, color);
   leds.show();
 }
 
@@ -156,7 +169,7 @@ void LedHead::updateStatusLed(uint32_t color) {
     return;
   }
   hDebugLog("update status color");
-  leds.setPixelColor(STATUS_LED, color);
+  leds.setPixelColor(statusLed, color);
   leds.show();
 }
 

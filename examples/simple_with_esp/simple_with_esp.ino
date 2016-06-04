@@ -13,7 +13,7 @@
 
 #include "LedHead.h"
 #include "ESP8266WiFi.h"
-#include "WiFiManager.h"
+#include "WiFiManager.h" // see https://github.com/tzapu/WiFiManager
 #include <vector>
 
 #define SEC_1               1000
@@ -22,7 +22,7 @@
 #define DELAY_MILLIS        SEC_1
 
 #define WIFI_CONFIG_AP_NAME        "esp"
-#define WIFI_CONFIG_AP_PW          "config"
+#define WIFI_CONFIG_AP_PW          "espconfig"
 
 
 WiFiManager wifiManager;
@@ -67,14 +67,16 @@ void initHead() {
 
 void wifiConfigModeCallback(WiFiManager *myWiFiManager) {
   log("Entered config mode");
-  log(WiFi.softAPIP());
-  log(myWiFiManager->getConfigPortalSSID());
+  //log(WiFi.softAPIP());
+  //if you used auto generated SSID, print it
+  //log(myWiFiManager->getConfigPortalSSID());
 }
 
 void initWifi() {
-  wifiManager.autoConnect(WIFI_CONFIG_AP_NAME, WIFI_CONFIG_AP_PW);
+  log("init wifi");
+  wifiManager.setConfigPortalTimeout(60); // 1 minute - 60 seconds
   wifiManager.setAPCallback(wifiConfigModeCallback);
-  wifiManager.setConfigPortalTimeout(180); // 3 minutes
+  wifiManager.autoConnect(WIFI_CONFIG_AP_NAME, WIFI_CONFIG_AP_PW);
 }
 
 void setup() {

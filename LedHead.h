@@ -1,17 +1,23 @@
 /*
  * LED Head - LedHead.h
- * (c) by ringbuchblock
+ * (c) ringbuchblock
+ * 
+ * A simple small library for controlling a total of 3 LEDs 
+ * (2 for the eyes and for the status) via Adafruit's Neopixel library. 
  */
 #ifndef LEDHEAD_H_
 #define LEDHEAD_H_
 
-#include <stdint.h>
+#include "Adafruit_NeoPixel.h" //https://github.com/adafruit/Adafruit_NeoPixel
 
 class LedHead {
 
-  public:  
-      LedHead();
+  public:
+      LedHead(uint16_t leftEye=2, uint16_t rightEye=1, uint16_t statusLed=0, uint8_t brightness=30, uint8_t pin=14, neoPixelType type=NEO_GRB + NEO_KHZ800);
       ~LedHead();
+
+      // use this to define a color yourself
+      uint32_t color(uint8_t r, uint8_t g, uint8_t b);
 
       // pre-defined colors
       uint32_t red();
@@ -21,8 +27,6 @@ class LedHead {
       uint32_t blue();
       uint32_t violet();
       uint32_t off();
-
-      uint32_t color(uint8_t r, uint8_t g, uint8_t b);
 
       void updateEyeColor(uint32_t color);
       void removeEyeColor();
