@@ -28,11 +28,13 @@ class LedHead {
       uint32_t violet();
       uint32_t off();
 
+      // interfaces for eye color control
       void updateEyeColor(uint32_t color);
       void removeEyeColor();
       void deactivateEyeLeds();
       void activateEyeLeds();
 
+      // interfaces for status LED color control
       void updateStatusLed(uint32_t color);
       void removeStatusColor();
       void deactivateStatusLed();
