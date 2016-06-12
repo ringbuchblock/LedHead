@@ -9,32 +9,15 @@
 #define LEDHEAD_ALL_COLOR_DELAY     1000 // 1 sec
 #define LEDHEAD_LED_COUNT           3
 
-Adafruit_NeoPixel leds;
 
-// leds
-uint16_t leftEye;
-uint16_t rightEye;
-uint16_t statusLed;
-uint8_t brightness;
 
-// colors
-uint32_t colorRed;
-uint32_t colorOrange;
-uint32_t colorGreen;
-uint32_t colorBlue;
-uint32_t colorViolet;
-uint32_t colorYellow;
-uint32_t colorOff;
-//const std::vector<uint32_t> predefinedColors = {colorRed, colorOrange, colorYellow, colorGreen, colorBlue, colorViolet};
-//const uint32_t colorUnknown = colorBlue;
-std::vector<uint32_t> predefinedColors;
-uint32_t colorUnknown;
+uint32_t red = Adafruit_NeoPixel::Color(150, 0, 0);
 
 
 // status members
 bool statusLedOff = false;
 bool eyeLedsOff = false;
-uint32_t lastEyeColor = colorUnknown;
+uint32_t lastEyeColor = 0;
 
 
 // ##################################################################################
@@ -55,6 +38,11 @@ void hDebugLog(String message){
 
 void LedHead::showAllColors() {
   hDebugLog("show all colors");
+  
+  
+  std::vector<uint32_t> predefinedColors = {red()}; //, orange(), colorYellow, colorGreen, colorBlue, colorViolet};
+
+  
   int colorCnt = predefinedColors.size();
   for(int i=0;i<colorCnt;i++) { 
     hDebugLog("color: ");
@@ -63,8 +51,8 @@ void LedHead::showAllColors() {
     updateStatusLed(color);
     delay(LEDHEAD_ALL_COLOR_DELAY);
   }
-  updateStatusLed(colorOff);
-  updateEyeColor(colorOff);
+  removeStatusColor();
+  removeEyeColor();
   delay(LEDHEAD_ALL_COLOR_DELAY);
 }
 
@@ -72,35 +60,24 @@ void LedHead::showAllColors() {
 // PUBLIC
 // ##################################################################################
 
-LedHead::LedHead(uint16_t leftEye, uint16_t rightEye, uint16_t statusLed, uint8_t brightness, uint8_t pin, neoPixelType type) {
+LedHead::LedHead(uint16_t left, uint16_t right, uint16_t status, uint8_t brightness, uint8_t pin, neoPixelType type) {
   hLog("init LED head");
 
   // leds
-  leftEye = leftEye;
-  rightEye = rightEye;
-  statusLed = statusLed;
+  leftEye = left;
+  rightEye = right;
+  statusLed = status;
 
   // init leds
   hDebugLog("init leds");
   leds = Adafruit_NeoPixel(LEDHEAD_LED_COUNT, pin, type);
   leds.begin(); // This initializes the NeoPixel library. 
   leds.setBrightness(brightness);
+  leds.show(); // initializes all leds to 'off'
 
   // init colors
   hDebugLog("init colors");
-  /*
-  colorRed = leds.Color(150, 0, 0);
-  colorOrange = leds.Color(255, 128, 0);
-  colorGreen = leds.Color(0, 150, 0);
-  colorBlue = leds.Color(0, 0, 150);
-  colorViolet = leds.Color(100, 0, 200);
-  colorYellow = leds.Color(255, 255, 0);
-  colorOff = leds.Color(0, 0, 0);
-  predefinedColors = {colorRed, colorOrange, colorYellow, colorGreen, colorBlue, colorViolet};
-  colorUnknown = colorBlue;
-  */
-
-  //showAllColors();
+  showAllColors();
   
   
   hDebugLog("... init finished");
@@ -113,31 +90,31 @@ uint32_t LedHead::color(uint8_t r, uint8_t g, uint8_t b) {
 }
 
 uint32_t LedHead::red() {
-  return colorRed;
+  return color(150,0,0);
 }
 
 uint32_t LedHead::orange() {
-  return colorOrange;
+  return color(255,128,0);
 }
 
 uint32_t LedHead::yellow() {
-  return colorYellow;
+  return color(255,255,0);
 }
 
 uint32_t LedHead::green() {
-  return colorGreen;
+  return color(0,150,0);
 }
 
 uint32_t LedHead::blue() {
-  return colorBlue;
+  return color(0,0,150);
 }
 
 uint32_t LedHead::violet() {
-  return colorViolet;
+  return color(100,0,200);
 }
 
 uint32_t LedHead::off() {
-  return colorOff;
+  return color(0,0,0);
 }
 
 void LedHead::updateEyeColor(uint32_t color) {
@@ -153,13 +130,13 @@ void LedHead::updateEyeColor(uint32_t color) {
 }
 
 void LedHead::removeEyeColor() {
-  updateStatusLed(colorOff);
+  updateStatusLed(off());
 }
 
 void LedHead::deactivateEyeLeds() {
   hDebugLog("deactivate eye leds");
   uint32_t curColor = lastEyeColor;
-  updateEyeColor(colorOff);
+  updateEyeColor(off());
   lastEyeColor = curColor;
   eyeLedsOff = true;
 }
@@ -181,12 +158,12 @@ void LedHead::updateStatusLed(uint32_t color) {
 }
 
 void LedHead::removeStatusColor() {
-  updateStatusLed(colorOff);
+  updateStatusLed(off());
 }
 
 void LedHead::deactivateStatusLed() {
   hDebugLog("deactivate status leds");
-  updateStatusLed(colorOff);
+  updateStatusLed(off());
   statusLedOff = true;
 }
 

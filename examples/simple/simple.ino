@@ -9,9 +9,10 @@
 #define SEC_10              10000
 #define DELAY_MILLIS        SEC_1
 
-LedHead head;
-std::vector<uint32_t> colors;
-int curColor;
+
+LedHead head = LedHead();
+std::vector<uint32_t> colors = {head.yellow(), head.blue(), head.violet(), head.off()};
+int curColor = 0;
 
 void log(String message){
     if (Serial) {
@@ -32,26 +33,17 @@ void initSerial() {
   Serial.println("setup");
 }
 
-void initHead() {
-  head = LedHead();
-  colors = {head.yellow(), head.blue(), head.violet(), head.off()};
-  curColor = 0;
-}
-
 void setup() {
   initSerial();
-  initHead();
 }
 
 void loop() {
   log("loop");
   
   head.updateStatusLed(head.green());
-  
   rotateEyeColor();
 
   delay(SEC_1);
-  // head.removeStatusColor();
-  head.updateStatusLed(head.off());
+  head.removeStatusColor();
   delay(DELAY_MILLIS);
 }

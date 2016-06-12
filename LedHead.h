@@ -9,6 +9,10 @@
 #define LEDHEAD_H_
 
 #include "Adafruit_NeoPixel.h" //https://github.com/adafruit/Adafruit_NeoPixel
+#ifdef __AVR__
+  #include <avr/power.h>
+#endif
+
 
 class LedHead {
 
@@ -41,6 +45,12 @@ class LedHead {
       void activateStatusLed();
 
   private:
+      Adafruit_NeoPixel leds;
+      // leds
+      uint16_t leftEye;
+      uint16_t rightEye;
+      uint16_t statusLed;
+      
       void showAllColors();
 };
 
