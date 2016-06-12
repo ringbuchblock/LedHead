@@ -17,23 +17,18 @@
 #include <vector>
 #include "LedHead.h"
 
-#define SEC_1               1000
-#define SEC_3               3000
-#define SEC_10              10000
-#define DELAY_MILLIS        SEC_1
-
-#define WIFI_CONFIG_AP_NAME        "esp"
-#define WIFI_CONFIG_AP_PW          "espconfig"
+#define SEC_1                   1000
+#define WIFI_CONFIG_AP_NAME     "esp"
+#define WIFI_CONFIG_AP_PW       "espconfig"
 
 
 LedHead head;
-std::vector<uint32_t> colors;
-int curColor;
+int curColor = 0;
 
 void log(String message){
-    if (Serial) {
-        Serial.println(message);
-    }
+  if (Serial) {
+    Serial.println(message);
+  }
 }
 
 bool wifiConnected() {
@@ -45,8 +40,8 @@ bool noWifi() {
 }
 
 void rotateEyeColor() {
+  std::vector<uint32_t> colors = {LedHead::yellow, LedHead::blue, LedHead::violet};
   head.updateEyeColor(colors[curColor]);
-    
   curColor = curColor + 1;
   if (curColor >= colors.size()) {
     curColor = 0;
@@ -60,8 +55,6 @@ void initSerial() {
 
 void initHead() {
   head = LedHead();
-  colors = {head.yellow(), head.blue(), head.violet(), head.off()};
-  curColor = 0;
 }
 
 void wifiConfigModeCallback(WiFiManager *myWiFiManager) {
@@ -73,7 +66,6 @@ void wifiConfigModeCallback(WiFiManager *myWiFiManager) {
 
 void initWifi() {
   log("init wifi");
-
 
   //Local intialization. Once its business is done, there is no need to keep it around
   WiFiManager wifiManager;
@@ -96,15 +88,13 @@ void setup() {
 void loop() {
   if (noWifi()) {
     log("no wifi");
-    head.updateStatusLed(head.red());
+    head.updateStatusColor(LedHead::red);
   } else {
-    head.updateStatusLed(head.green());
+    head.updateStatusColor(LedHead::green);
   }
 
   rotateEyeColor();
-
   delay(SEC_1);
-  // head.removeStatusColor();
-  head.updateStatusLed(head.off());
-  delay(DELAY_MILLIS);
+  head.removeStatusColor();
+  delay(SEC_1);
 }
