@@ -10,11 +10,12 @@
  * 
  * 
  */
-
-#include "LedHead.h"
-#include "ESP8266WiFi.h"
-#include "WiFiManager.h" // see https://github.com/tzapu/WiFiManager
+#include <ESP8266WiFi.h>          //https://github.com/esp8266/Arduino
+#include <DNSServer.h>            // needed for WiFiManager
+#include <ESP8266WebServer.h>     // needed for WiFiManager
+#include <WiFiManager.h>          //https://github.com/tzapu/WiFiManager
 #include <vector>
+#include "LedHead.h"
 
 #define SEC_1               1000
 #define SEC_3               3000
@@ -25,9 +26,7 @@
 #define WIFI_CONFIG_AP_PW          "espconfig"
 
 
-WiFiManager wifiManager;
 LedHead head;
-
 std::vector<uint32_t> colors;
 int curColor;
 
@@ -74,6 +73,15 @@ void wifiConfigModeCallback(WiFiManager *myWiFiManager) {
 
 void initWifi() {
   log("init wifi");
+
+
+  //Local intialization. Once its business is done, there is no need to keep it around
+  WiFiManager wifiManager;
+
+  //wifiManager.resetSettings();//reset saved settings
+  
+  //WiFi.disconnect();
+  
   wifiManager.setConfigPortalTimeout(60); // 1 minute - 60 seconds
   wifiManager.setAPCallback(wifiConfigModeCallback);
   wifiManager.autoConnect(WIFI_CONFIG_AP_NAME, WIFI_CONFIG_AP_PW);

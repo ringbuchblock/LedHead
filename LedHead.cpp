@@ -5,14 +5,9 @@
 #include "LedHead.h"
 #include <vector>
 
-#define DEBUG               false
-
-#define SEC_1               1000
-#define SEC_10              10000
-#define DELAY_MILLIS        SEC_1
-#define ALL_COLOR_DELAY     SEC_1
-
-#define LED_COUNT      3
+#define LEDHEAD_DEBUG               true
+#define LEDHEAD_ALL_COLOR_DELAY     1000 // 1 sec
+#define LEDHEAD_LED_COUNT           3
 
 Adafruit_NeoPixel leds;
 
@@ -30,8 +25,11 @@ uint32_t colorBlue;
 uint32_t colorViolet;
 uint32_t colorYellow;
 uint32_t colorOff;
-const std::vector<uint32_t> allColors = {colorRed, colorOrange, colorYellow, colorGreen, colorBlue, colorViolet};
-const uint32_t colorUnknown = colorBlue;
+//const std::vector<uint32_t> predefinedColors = {colorRed, colorOrange, colorYellow, colorGreen, colorBlue, colorViolet};
+//const uint32_t colorUnknown = colorBlue;
+std::vector<uint32_t> predefinedColors;
+uint32_t colorUnknown;
+
 
 // status members
 bool statusLedOff = false;
@@ -50,22 +48,24 @@ void hLog(String message){
 }
 
 void hDebugLog(String message){
-  if (DEBUG) {
+  if (LEDHEAD_DEBUG) {
     hLog(message);
   }
 }
 
 void LedHead::showAllColors() {
-  int colorCnt = allColors.size();
+  hDebugLog("show all colors");
+  int colorCnt = predefinedColors.size();
   for(int i=0;i<colorCnt;i++) { 
-    uint32_t color = allColors[i]; 
+    hDebugLog("color: ");
+    uint32_t color = predefinedColors[i]; 
     updateEyeColor(color);
     updateStatusLed(color);
-    delay(ALL_COLOR_DELAY);
+    delay(LEDHEAD_ALL_COLOR_DELAY);
   }
   updateStatusLed(colorOff);
   updateEyeColor(colorOff);
-  delay(ALL_COLOR_DELAY);
+  delay(LEDHEAD_ALL_COLOR_DELAY);
 }
 
 // ##################################################################################
@@ -81,11 +81,14 @@ LedHead::LedHead(uint16_t leftEye, uint16_t rightEye, uint16_t statusLed, uint8_
   statusLed = statusLed;
 
   // init leds
-  leds = Adafruit_NeoPixel(LED_COUNT, pin, type);
+  hDebugLog("init leds");
+  leds = Adafruit_NeoPixel(LEDHEAD_LED_COUNT, pin, type);
   leds.begin(); // This initializes the NeoPixel library. 
   leds.setBrightness(brightness);
 
   // init colors
+  hDebugLog("init colors");
+  /*
   colorRed = leds.Color(150, 0, 0);
   colorOrange = leds.Color(255, 128, 0);
   colorGreen = leds.Color(0, 150, 0);
@@ -93,8 +96,14 @@ LedHead::LedHead(uint16_t leftEye, uint16_t rightEye, uint16_t statusLed, uint8_
   colorViolet = leds.Color(100, 0, 200);
   colorYellow = leds.Color(255, 255, 0);
   colorOff = leds.Color(0, 0, 0);
+  predefinedColors = {colorRed, colorOrange, colorYellow, colorGreen, colorBlue, colorViolet};
+  colorUnknown = colorBlue;
+  */
 
-  showAllColors();
+  //showAllColors();
+  
+  
+  hDebugLog("... init finished");
 }
 
 LedHead::~LedHead() {}
