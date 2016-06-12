@@ -17,20 +17,19 @@
 class LedHead {
 
   public:
-      LedHead(uint16_t leftEye=2, uint16_t rightEye=1, uint16_t statusLed=0, uint8_t brightness=30, uint8_t pin=14, neoPixelType type=NEO_GRB + NEO_KHZ800);
+      LedHead(uint16_t leftEye=2, uint16_t rightEye=1, uint16_t statusLed=0, uint8_t brightness=30);
       ~LedHead();
 
-      // use this to define a color yourself
-      uint32_t color(uint8_t r, uint8_t g, uint8_t b);
-
-      // pre-defined colors
-      uint32_t red();
-      uint32_t orange();
-      uint32_t yellow();
-      uint32_t green();
-      uint32_t blue();
-      uint32_t violet();
-      uint32_t off();
+      // pre-defined colors:
+      // you can define more colors by using Adafruit_NeoPixel::Color(uint8_t r, uint8_t g, uint8_t b))
+      const static uint32_t 
+        red, 
+        orange,
+        yellow,
+        green,
+        blue,
+        violet,
+        off;
 
       // interfaces for eye color control
       void updateEyeColor(uint32_t color);
@@ -39,18 +38,12 @@ class LedHead {
       void activateEyeLeds();
 
       // interfaces for status LED color control
-      void updateStatusLed(uint32_t color);
+      void updateStatusColor(uint32_t color);
       void removeStatusColor();
       void deactivateStatusLed();
       void activateStatusLed();
 
   private:
-      Adafruit_NeoPixel leds;
-      // leds
-      uint16_t leftEye;
-      uint16_t rightEye;
-      uint16_t statusLed;
-      
       void showAllColors();
 };
 

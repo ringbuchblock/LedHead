@@ -5,22 +5,18 @@
 #include <vector>
 
 #define SEC_1               1000
-#define SEC_3               3000
-#define SEC_10              10000
-#define DELAY_MILLIS        SEC_1
 
-
-LedHead head = LedHead();
-std::vector<uint32_t> colors = {head.yellow(), head.blue(), head.violet(), head.off()};
+LedHead head;
 int curColor = 0;
 
 void log(String message){
-    if (Serial) {
-        Serial.println(message);
-    }
+  if (Serial) {
+    Serial.println(message);
+  }
 }
 
 void rotateEyeColor() {
+  std::vector<uint32_t> colors = {LedHead::yellow, LedHead::blue, LedHead::violet};
   head.updateEyeColor(colors[curColor]);  
   curColor = curColor + 1;
   if (curColor >= colors.size()) {
@@ -33,17 +29,22 @@ void initSerial() {
   Serial.println("setup");
 }
 
+void initHead() {
+  head = LedHead();
+}
+
 void setup() {
   initSerial();
+  initHead();
 }
 
 void loop() {
   log("loop");
   
-  head.updateStatusLed(head.green());
+  head.updateStatusColor(LedHead::green);
   rotateEyeColor();
 
   delay(SEC_1);
   head.removeStatusColor();
-  delay(DELAY_MILLIS);
+  delay(SEC_1);
 }
