@@ -23,13 +23,13 @@ class LedHead {
       // pre-defined colors:
       // you can define more colors by using Adafruit_NeoPixel::Color(uint8_t r, uint8_t g, uint8_t b))
       const static uint32_t 
-        red, 
-        orange,
-        yellow,
-        green,
-        blue,
-        violet,
-        off;
+        RED, 
+        ORANGE,
+        YELLOW,
+        GREEN,
+        BLUE,
+        VIOLET,
+        OFF;
 
       // interfaces for eye color control
       void updateEyeColor(uint32_t color);

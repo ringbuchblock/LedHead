@@ -40,7 +40,7 @@ bool noWifi() {
 }
 
 void rotateEyeColor() {
-  std::vector<uint32_t> colors = {LedHead::yellow, LedHead::blue, LedHead::violet};
+  std::vector<uint32_t> colors = {LedHead::YELLOW, LedHead::BLUE, LedHead::VIOLET};
   head.updateEyeColor(colors[curColor]);
   curColor = curColor + 1;
   if (curColor >= colors.size()) {
@@ -88,9 +88,9 @@ void setup() {
 void loop() {
   if (noWifi()) {
     log("no wifi");
-    head.updateStatusColor(LedHead::red);
+    head.updateStatusColor(LedHead::RED);
   } else {
-    head.updateStatusColor(LedHead::green);
+    head.updateStatusColor(LedHead::GREEN);
   }
 
   rotateEyeColor();

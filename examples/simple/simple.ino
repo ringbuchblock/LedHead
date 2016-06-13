@@ -16,7 +16,7 @@ void log(String message){
 }
 
 void rotateEyeColor() {
-  std::vector<uint32_t> colors = {LedHead::yellow, LedHead::blue, LedHead::violet};
+  std::vector<uint32_t> colors = {LedHead::YELLOW, LedHead::BLUE, LedHead::VIOLET};
   head.updateEyeColor(colors[curColor]);  
   curColor = curColor + 1;
   if (curColor >= colors.size()) {
@@ -41,7 +41,7 @@ void setup() {
 void loop() {
   log("loop");
   
-  head.updateStatusColor(LedHead::green);
+  head.updateStatusColor(LedHead::GREEN);
   rotateEyeColor();
 
   delay(SEC_1);
