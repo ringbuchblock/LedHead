@@ -10,10 +10,10 @@
  * 
  * 
  */
-#include <ESP8266WiFi.h>          //https://github.com/esp8266/Arduino
+#include <ESP8266WiFi.h>          // https://github.com/esp8266/Arduino
 #include <DNSServer.h>            // needed for WiFiManager
 #include <ESP8266WebServer.h>     // needed for WiFiManager
-#include <WiFiManager.h>          //https://github.com/tzapu/WiFiManager
+#include <WiFiManager.h>          // https://github.com/tzapu/WiFiManager
 #include <vector>
 #include "LedHead.h"
 
