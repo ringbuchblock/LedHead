@@ -18,8 +18,9 @@
 #define SEC_15                  15000
 
 #define MQTT_KEEPALIVE          60 // this is a constant of PubSubClient which we will override
-#define MQTT_RECONNECT_TIMEOUT  SEC_15 //15 SEC
+#define MQTT_RECONNECT_TIMEOUT  SEC_15
 #define MQTT_SERVER             "<your mqtt server>"
+#define MQTT_PORT               1883
 
 #define MQTT_BUILD_STATUS_TOPIC "<your mqtt topic>"
 #define MSG_BUILD_SUCCESS       "SUCCESSFUL"
@@ -32,7 +33,7 @@
 
 LedHead head;
 WiFiClient wc;
-PubSubClient mqttClient(wc);
+PubSubClient mqttClient;
 
 
 bool newBuildStatus = false;
@@ -76,11 +77,11 @@ void handleMqttMessage(const String& topic, const String& msg) {
   Serial.print(": ");
   Serial.println(msg);
   if (topic == MQTT_BUILD_STATUS_TOPIC) {
-    buildStatusCallback(payload);
+    handleBuildStatusMsg(msg);
   }
 }
 
-void buildStatusCallback(const String& msg) {
+void handleBuildStatusMsg(const String& msg) {
   if (msg == MSG_BUILD_SUCCESS) {
     head.updateEyeColor(LedHead::GREEN);
   } else if (msg == MSG_BUILD_FAILURE) {
@@ -133,8 +134,10 @@ void initWifi() {
 
 void initMqtt() {
   Serial.println("init mqtt");
-  mqttClient.setServer(MQTT_SERVER, 1883);
-  mqttClient.setCallback(mqttSubscribeCallback);
+  mqttClient
+    .setClient(wc)
+    .setServer(MQTT_SERVER, MQTT_PORT)
+    .setCallback(mqttSubscribeCallback);
 }
 
 void setup() {
