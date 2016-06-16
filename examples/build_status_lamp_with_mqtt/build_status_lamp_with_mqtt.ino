@@ -147,7 +147,10 @@ void setup() {
   initMqtt();
 }
 
-void checkForErrors() {
+void headLoop() {
+  head.removeStatusColor();
+  delay(SEC_1);
+  
   if (noWifi()) {
     head.updateStatusColor(LedHead::RED);
   } else if (noMqtt()) {
@@ -158,19 +161,11 @@ void checkForErrors() {
     } else {
       head.updateStatusColor(LedHead::BLUE);
     }
+    newBuildStatus = false;
   }
 }
 
-void headLoop() {
-  head.removeStatusColor();
-  newBuildStatus = false;
-  delay(SEC_1);
-  checkForErrors();
-}
-
 void loop() {
-  headLoop();
-
   if (wifiConnected()) {
     if (!mqttConnected()) {
       mqttReconnect();
@@ -178,5 +173,8 @@ void loop() {
       mqttClient.loop();
     }
   }
+  
+  headLoop();
+  
   delay(SEC_1);
 }
