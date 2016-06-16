@@ -10,47 +10,35 @@ See [simple example with ESP](https://github.com/ringbuchblock/LedHead/tree/mast
 
 ```arduino
 
-WiFiManager wifiManager;
 LedHead head;
-
-std::vector<uint32_t> colors;
-int curColor;
+int curColor = 0;
 
 [...]
 
 void rotateEyeColor() {
+  std::vector<uint32_t> colors = {LedHead::YELLOW, LedHead::BLUE, LedHead::VIOLET};
   head.updateEyeColor(colors[curColor]);
-
   curColor = curColor + 1;
   if (curColor >= colors.size()) {
     curColor = 0;
   }  
 }
 
-void initHead() {
-  head = LedHead();
-  colors = {head.yellow(), head.blue(), head.violet(), head.off()};
-  curColor = 0;
-}
-
 void setup() {
-  initHead();
   [...]
 }
 
 void loop() {
   if (noWifi()) {
-    log("no wifi");
-    head.updateStatusLed(head.red());
+    head.updateStatusLed(LedHead::RED);
   } else {
-    head.updateStatusLed(head.green());
+    head.updateStatusLed(LedHead::GREEN);
   }
 
   rotateEyeColor();
 
   delay(SEC_1);
-  // head.removeStatusColor();
-  head.updateStatusLed(head.off());
-  delay(DELAY_MILLIS);
+  head.removeStatusColor();
+  delay(SEC_1);
 }
 ```
